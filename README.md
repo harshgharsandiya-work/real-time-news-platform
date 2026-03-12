@@ -1,5 +1,9 @@
 # Real Time News Platform
 
+A full-stack news broadcasting platform
+
+> Demonstrate Firebase Cloud Messaging (FCM) integration.
+
 ## Features
 
 1. Admin Panel
