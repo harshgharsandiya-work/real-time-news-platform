@@ -1,14 +1,18 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
+const env = require("./config/env");
 
+const app = require("./app");
 require("./config/firebase");
+const prisma = require("./config/prisma");
 
-const app = express();
+prisma
+    .$connect()
+    .then(() => {
+        console.log("Database connected");
+    })
+    .catch(() => {
+        console.log("Database not connected");
+    });
 
-app.use(cors());
-app.use(express.json());
-
-app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port ${process.env.PORT}`);
+app.listen(env.PORT, () => {
+    console.log(`Server is running on port ${env.PORT}`);
 });

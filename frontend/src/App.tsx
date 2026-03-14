@@ -1,26 +1,30 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import { messaging } from "./config/firebase";
-import { getToken } from "firebase/messaging";
+import { getToken, onMessage } from "firebase/messaging";
 
 function App() {
     const [fcmToken, setFcmToken] = useState<string | null>(null);
 
     useEffect(() => {
-        async function getPermissionAndToken() {
-            const permission = await Notification.requestPermission();
-            if (permission === "granted") {
-                const token = await getToken(messaging, {
-                    vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
-                });
-                setFcmToken(token);
-            } else {
-                console.log("User denied notification");
-            }
-        }
-
-        getPermissionAndToken();
+        requestPermission();
     }, []);
+
+    const requestPermission = async () => {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+            const token = await getToken(messaging, {
+                vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
+            });
+            setFcmToken(token);
+        } else {
+            console.log("User denied notification");
+        }
+    };
+
+    onMessage(messaging, (payload) => {
+        console.log("[Foreground Message]: ", payload);
+    });
 
     return (
         <>

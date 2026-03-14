@@ -1,0 +1,134 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  uid   String  @id // Firebase Auth UID 
+  email String  @unique
+  name  String?
+  role  Role    @default(USER)
+
+  //one user has one preferences 
+  notificationPreferences NotificationPreferences?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //one user has many tokens and many subscriptions
+  fcmTokens          FcmToken[]
+  topicSubscriptions TopicSubscription[]
+}
+
+model NotificationPreferences {
+  id String @id @default(cuid())
+
+  //Notification Settings
+  receivePushNotifications Boolean @default(true)
+
+  //Notification Preferences
+  isMuted    Boolean   @default(false)
+  mutedUntil DateTime?
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [uid], onDelete: Cascade)
+
+  updatedAt DateTime @updatedAt
+}
+
+model FcmToken {
+  id       String  @id @default(cuid())
+  token    String  @unique
+  platform String  @default("web") // web, android, ios
+  isActive Boolean @default(true) // Set to false if sending fails later
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [uid], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Topic {
+  id          String  @id @default(cuid())
+  name        String  @unique //Sports, Tech, Finance
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  topicSubscriptions TopicSubscription[]
+}
+
+model TopicSubscription {
+  id           String   @id @default(cuid())
+  subscribedAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [uid], onDelete: Cascade)
+
+  topicId String
+  topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  // A user should only be able to subscribe to a specific topic once
+  @@unique([userId, topicId])
+  @@index([topicId])
+}
+
+model News {
+  id          String  @id @default(cuid())
+  title       String
+  description String?
+  content     String  @db.Text
+  imageUrl    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Notification {
+  id    String @id @default(cuid())
+  title String
+  body  String
+
+  //Scheduling
+  sendAt       DateTime? // Null if scheduled for future
+  scheduledFor DateTime? //Target time for scheduling
+
+  sendBy      String? //ADMIN UID
+  target      TargetType
+  targetValue String? // UID if USER, or topicId if TOPIC
+  status      NotificationStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  USER
+}
+
+enum TargetType {
+  USER
+  TOPIC
+  ALL
+}
+
+enum NotificationStatus {
+  PENDING
+  INPROGRESS
+  SENT
+  FAILED
+}
