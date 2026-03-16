@@ -65,7 +65,7 @@ export default function UsersManager() {
                         className="bg-white rounded-xl border border-gray-100 shadow-sm p-5"
                     >
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                            <div className="flex-1 min-w-0">
+                            <div className="min-w-0">
                                 <div className="flex items-center gap-2 flex-wrap">
                                     <h3 className="font-bold text-gray-900">
                                         {user.name || "Unnamed User"}
@@ -107,7 +107,29 @@ export default function UsersManager() {
                             </div>
 
                             <div className="flex items-center gap-4 shrink-0">
-                                <div className="text-center">
+                                {user.topicSubscriptions?.length > 0 && (
+                                    <div className="border-t border-gray-50">
+                                        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                                            Subscribed Topics
+                                        </p>
+                                        <div className="flex flex-wrap gap-1.5">
+                                            {user.topicSubscriptions.map(
+                                                (sub: any) => (
+                                                    <span
+                                                        key={sub.id}
+                                                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700"
+                                                    >
+                                                        {sub.topic.name}
+                                                    </span>
+                                                ),
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="flex items-center gap-10 shrink-0">
+                                <div className="text-center pb-2">
                                     <p className="text-xs text-gray-400">
                                         Tokens
                                     </p>
@@ -115,7 +137,7 @@ export default function UsersManager() {
                                         {user.fcmTokens?.length || 0}
                                     </p>
                                 </div>
-                                <div className="text-center">
+                                <div className="text-center pb-2">
                                     <p className="text-xs text-gray-400">
                                         Subscriptions
                                     </p>
@@ -124,7 +146,7 @@ export default function UsersManager() {
                                     </p>
                                 </div>
                                 <div>
-                                    <p className="text-xs text-gray-400 mb-1">
+                                    <p className="text-xs text-gray-400 mb-1 text-center">
                                         Role
                                     </p>
                                     <select
@@ -133,7 +155,7 @@ export default function UsersManager() {
                                             changeRole(user.uid, e.target.value)
                                         }
                                         disabled={updatingRole === user.uid}
-                                        className="text-sm border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-200 disabled:opacity-50 bg-white"
+                                        className="text-sm border border-gray-200 rounded-lg px-2 py-0.5  disabled:opacity-50 bg-white text-black"
                                     >
                                         <option value="USER">User</option>
                                         <option value="EDITOR">Editor</option>
@@ -142,24 +164,6 @@ export default function UsersManager() {
                                 </div>
                             </div>
                         </div>
-
-                        {user.topicSubscriptions?.length > 0 && (
-                            <div className="mt-3 pt-3 border-t border-gray-50">
-                                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                                    Subscribed Topics
-                                </p>
-                                <div className="flex flex-wrap gap-1.5">
-                                    {user.topicSubscriptions.map((sub: any) => (
-                                        <span
-                                            key={sub.id}
-                                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700"
-                                        >
-                                            {sub.topic.name}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
                     </div>
                 ))}
                 {users.length === 0 && (
