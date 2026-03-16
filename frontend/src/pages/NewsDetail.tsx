@@ -13,6 +13,8 @@ import {
     Calendar,
     User,
 } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 /* ── Types ───────────────────────────────────────── */
 interface Topic {
@@ -192,7 +194,7 @@ export default function NewsDetail() {
             </h1>
 
             {/* Meta */}
-            <div className="flex items-center gap-5 text-sm text-gray-500 border-b border-gray-100 pb-4">
+            <div className="flex items-center gap-5 text-sm text-gray-500 border-b border-gray-200 pb-4">
                 <span className="flex items-center gap-1.5">
                     <User size={14} />
                     {article.author?.name ||
@@ -207,14 +209,20 @@ export default function NewsDetail() {
 
             {/* Description */}
             {article.description && (
-                <p className="text-lg text-gray-600 leading-relaxed font-medium">
-                    {article.description}
-                </p>
+                <div className="text-lg text-gray-600 leading-relaxed font-medium prose prose-lg prose-indigo max-w-none ">
+                    <blockquote className="not-italic font-normal">
+                        {/* <ReactMarkdown remarkPlugins={[remarkGfm]}> */}
+                        {article.description}
+                        {/* </ReactMarkdown> */}
+                    </blockquote>
+                </div>
             )}
 
             {/* Content */}
-            <div className="prose prose-indigo max-w-none text-gray-800 leading-relaxed whitespace-pre-wrap">
-                {article.content}
+            <div className="prose prose-indigo max-w-none text-gray-800 leading-relaxed">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {article.content}
+                </ReactMarkdown>
             </div>
 
             {/* Reactions */}
@@ -257,7 +265,7 @@ export default function NewsDetail() {
                             value={commentText}
                             onChange={(e) => setCommentText(e.target.value)}
                             placeholder="Share your thoughts…"
-                            className="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+                            className="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 text-black"
                         />
                         <button
                             type="submit"

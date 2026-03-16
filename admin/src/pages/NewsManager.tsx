@@ -213,30 +213,30 @@ export default function NewsManager() {
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
                             <label className="block text-sm font-semibold text-gray-700 mb-1">
-                                Title *
+                                Title <span className="text-red-500">*</span>
                             </label>
                             <input
                                 required
                                 minLength={5}
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
-                                className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                                className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 text-black"
                             />
                         </div>
                         <div>
                             <label className="block text-sm font-semibold text-gray-700 mb-1">
-                                Description
+                                Description{" "}
                             </label>
                             <textarea
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                                 rows={2}
-                                className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 resize-none"
+                                className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 resize-none text-black"
                             />
                         </div>
                         <div>
                             <label className="block text-sm font-semibold text-gray-700 mb-1">
-                                Content *
+                                Content <span className="text-red-500">*</span>
                             </label>
                             <textarea
                                 required
@@ -244,13 +244,13 @@ export default function NewsManager() {
                                 value={content}
                                 onChange={(e) => setContent(e.target.value)}
                                 rows={6}
-                                className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 font-mono resize-y"
+                                className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 font-mono resize-y text-black"
                             />
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-1">
-                                    Image URL
+                                    Image URL{" "}
                                 </label>
                                 <input
                                     type="url"
@@ -259,7 +259,7 @@ export default function NewsManager() {
                                         setImageUrl(e.target.value)
                                     }
                                     placeholder="https://..."
-                                    className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                                    className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 text-black"
                                 />
                             </div>
                             <div>
@@ -273,7 +273,7 @@ export default function NewsManager() {
                                         setScheduledFor(e.target.value)
                                     }
                                     disabled={publishNow}
-                                    className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 disabled:opacity-50"
+                                    className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 disabled:opacity-50 text-black"
                                 />
                             </div>
                         </div>

@@ -15,6 +15,8 @@ import {
     BookOpen,
     Compass,
 } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 /* ── Types ───────────────────────────────────────────── */
 interface Topic {
@@ -204,16 +206,20 @@ function NewsCard({
     };
 
     return (
-        <article className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all flex flex-col">
+        <article className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transform  duration-300 hover:shadow-md transition-all flex flex-col hover:border-gray-200 hover:scale-101">
             {article.imageUrl ? (
-                <img
-                    src={article.imageUrl}
-                    alt={article.title}
-                    className="w-full h-44 object-cover"
-                />
+                <Link to={`/news/${article.id}`}>
+                    <img
+                        src={article.imageUrl}
+                        alt={article.title}
+                        className="w-full h-44 object-cover"
+                    />
+                </Link>
             ) : (
                 <div className="w-full h-44 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center">
-                    <BookOpen size={36} className="text-indigo-200" />
+                    <Link to={`/news/${article.id}`}>
+                        <BookOpen size={36} className="text-indigo-200" />
+                    </Link>
                 </div>
             )}
 
@@ -252,9 +258,11 @@ function NewsCard({
                     <h2 className="font-bold text-gray-900 text-base leading-snug mb-1 line-clamp-2">
                         {article.title}
                     </h2>
-                    <p className="text-gray-500 text-sm line-clamp-3">
-                        {article.description || article.content}
-                    </p>
+                    <div className="text-gray-500 text-sm line-clamp-3 prose prose-sm prose-indigo max-w-none">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            {article.description || article.content}
+                        </ReactMarkdown>
+                    </div>
                 </div>
 
                 <div className="flex items-center justify-between text-xs text-gray-400">
@@ -435,16 +443,18 @@ export default function NewsFeed() {
             </div>
 
             {/* Search */}
-            <div className="relative">
+
+            <div className="relative flex items-center">
                 <Search
                     size={17}
                     className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
                 />
+
                 <input
+                    className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md pl-10 pr-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                    placeholder="Search articles by title or topic…"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Search articles by title or topic…"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 bg-white shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
                 />
             </div>
 

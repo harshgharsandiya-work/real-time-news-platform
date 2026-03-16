@@ -112,7 +112,7 @@ export default function SubmitArticle() {
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         placeholder="Enter article title"
-                        className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+                        className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-40 text-black"
                     />
                 </div>
 
@@ -126,7 +126,7 @@ export default function SubmitArticle() {
                         onChange={(e) => setDescription(e.target.value)}
                         placeholder="A brief summary of the article (optional)"
                         rows={2}
-                        className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 resize-none"
+                        className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 resize-none text-black"
                     />
                 </div>
 
@@ -142,7 +142,7 @@ export default function SubmitArticle() {
                         onChange={(e) => setContent(e.target.value)}
                         placeholder="Write the full article here…"
                         rows={8}
-                        className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 resize-y font-mono"
+                        className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 resize-y font-mono text-black"
                     />
                 </div>
 
@@ -156,7 +156,7 @@ export default function SubmitArticle() {
                         value={imageUrl}
                         onChange={(e) => setImageUrl(e.target.value)}
                         placeholder="https://example.com/image.jpg"
-                        className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+                        className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 text-black"
                     />
                 </div>
 
@@ -210,7 +210,7 @@ export default function SubmitArticle() {
                         value={scheduledFor}
                         onChange={(e) => setScheduledFor(e.target.value)}
                         min={new Date().toISOString().slice(0, 16)}
-                        className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+                        className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 text-black"
                     />
                     <p className="text-xs text-gray-400 mt-1">
                         Your article will be automatically published and

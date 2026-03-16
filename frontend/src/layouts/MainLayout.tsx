@@ -45,89 +45,107 @@ export default function MainLayout() {
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col">
             <FCMManager />
-            <nav className="bg-indigo-600 border-b border-indigo-700 sticky top-0 z-50">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between h-16">
-                        <div className="flex items-center">
-                            <div className="shrink-0 text-white font-bold text-xl tracking-wide flex items-center gap-2">
-                                <Bell size={24} className="text-indigo-200" />
-                                Real-Time News
-                            </div>
-                            <div className="hidden md:block">
-                                <div className="ml-10 flex items-baseline space-x-4">
-                                    {navLinks.map((link) => (
-                                        <Link
-                                            key={link.name}
-                                            to={link.path}
-                                            className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                                                location.pathname === link.path
-                                                    ? "bg-indigo-800 text-white"
-                                                    : "text-indigo-100 hover:bg-indigo-700 hover:text-white"
-                                            }`}
-                                        >
-                                            {link.icon}
-                                            {link.name}
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="hidden md:block">
-                            <div className="ml-4 flex items-center md:ml-6 gap-4">
-                                <span className="text-sm text-indigo-200">
-                                    {user?.email}
-                                </span>
-                                <button
-                                    onClick={handleLogout}
-                                    className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-indigo-100 hover:bg-indigo-700 hover:text-white transition-colors"
-                                >
-                                    <LogOut size={18} />
-                                    Logout
-                                </button>
-                            </div>
-                        </div>
-                        <div className="-mr-2 flex md:hidden">
-                            <button
-                                onClick={() =>
-                                    setIsMobileMenuOpen(!isMobileMenuOpen)
-                                }
-                                className="inline-flex items-center justify-center p-2 rounded-md text-indigo-200 hover:text-white hover:bg-indigo-700 focus:outline-none"
+
+            {/* Navbar */}
+            <nav className="bg-gradient-to-r from-blue-600 to-purple-700 shadow-md sticky top-0 z-50">
+                <div className="container mx-auto px-6 py-4 flex items-center justify-between relative">
+                    {/* Logo */}
+                    <a
+                        aria-label="Homepage"
+                        href="/"
+                        className="flex items-center gap-2 text-white font-bold text-xl tracking-wide  hover:text-gray-100 shrink-0"
+                    >
+                        <Bell size={24} className="text-indigo-200" />
+                        Real-Time News
+                    </a>
+
+                    {/* Desktop Nav Links */}
+                    <div className="hidden lg:flex items-center space-x-2 flex-grow justify-center">
+                        {navLinks.map((link) => (
+                            <Link
+                                key={link.name}
+                                to={link.path}
+                                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                                    location.pathname === link.path
+                                        ? "bg-indigo-800 text-white"
+                                        : "text-indigo-100 hover:bg-indigo-700 hover:text-white"
+                                }`}
                             >
-                                {isMobileMenuOpen ? (
-                                    <X size={24} />
-                                ) : (
-                                    <Menu size={24} />
-                                )}
-                            </button>
-                        </div>
+                                {link.icon}
+                                {link.name}
+                            </Link>
+                        ))}
+                    </div>
+
+                    {/* Desktop Right: User + Logout */}
+                    <div className="hidden lg:flex items-center space-x-4">
+                        <Link
+                            to="/preferences"
+                            className="text-indigo-100 text-sm"
+                        >
+                            {user?.email?.split("@")[0]}
+                        </Link>
+                        <button
+                            onClick={handleLogout}
+                            className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-indigo-100 hover:bg-indigo-700 hover:text-white transition-colors"
+                        >
+                            <LogOut size={18} />
+                            Logout
+                        </button>
+                    </div>
+
+                    {/* Mobile Hamburger Toggle */}
+                    <div className="lg:hidden">
+                        <button
+                            aria-label="Toggle navigation"
+                            aria-expanded={isMobileMenuOpen}
+                            onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+                            className="text-white hover:text-gray-200 focus:outline-none focus:text-gray-200 p-2"
+                        >
+                            {isMobileMenuOpen ? (
+                                <X size={24} />
+                            ) : (
+                                <Menu size={24} />
+                            )}
+                        </button>
                     </div>
                 </div>
 
-                {/* Mobile menu */}
+                {/* Mobile Dropdown Menu */}
                 {isMobileMenuOpen && (
-                    <div className="md:hidden">
-                        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                            {navLinks.map((link) => (
-                                <Link
-                                    key={link.name}
-                                    to={link.path}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className={`flex items-center gap-3 px-3 py-2 rounded-md text-base font-medium ${
-                                        location.pathname === link.path
-                                            ? "bg-indigo-800 text-white"
-                                            : "text-indigo-100 hover:bg-indigo-700 hover:text-white"
-                                    }`}
-                                >
-                                    {link.icon}
-                                    {link.name}
-                                </Link>
-                            ))}
+                    <div className="lg:hidden bg-indigo-800 px-4 py-3 space-y-1">
+                        {navLinks.map((link) => (
+                            <Link
+                                key={link.name}
+                                to={link.path}
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                                    location.pathname === link.path
+                                        ? "bg-indigo-900 text-white"
+                                        : "text-indigo-100 hover:bg-indigo-700 hover:text-white"
+                                }`}
+                            >
+                                {link.icon}
+                                {link.name}
+                            </Link>
+                        ))}
+
+                        <hr className="border-indigo-600 my-2" />
+
+                        {/* Mobile User + Logout */}
+                        <div className="flex items-center justify-between px-3 py-2">
+                            <Link
+                                to="/preferences"
+                                className="text-indigo-200 text-sm"
+                            >
+                                {user?.email?.split("@")[0]}
+                            </Link>
                             <button
                                 onClick={() => {
                                     setIsMobileMenuOpen(false);
                                     handleLogout();
                                 }}
-                                className="flex w-full items-center gap-3 px-3 py-2 rounded-md text-base font-medium text-indigo-100 hover:bg-indigo-700 hover:text-white"
+                                className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-indigo-100 hover:bg-indigo-700 hover:text-white transition-colors"
                             >
                                 <LogOut size={18} />
                                 Logout
@@ -137,6 +155,7 @@ export default function MainLayout() {
                 )}
             </nav>
 
+            {/* Main Content */}
             <main className="flex-1 w-full max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
                 <div className="px-4 py-4 sm:px-0">
                     <Outlet />
