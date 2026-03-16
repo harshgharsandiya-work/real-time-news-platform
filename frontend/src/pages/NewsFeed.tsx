@@ -14,6 +14,7 @@ import {
     Check,
     BookOpen,
     Compass,
+    Plus,
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -438,7 +439,8 @@ export default function NewsFeed() {
                     to="/submit-article"
                     className="shrink-0 inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-xl font-semibold text-sm hover:bg-indigo-700 transition-colors shadow-sm"
                 >
-                    + Submit Article
+                    <Send size={15} />
+                    Submit Article
                 </Link>
             </div>
 
@@ -452,7 +454,7 @@ export default function NewsFeed() {
 
                 <input
                     className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md pl-10 pr-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-                    placeholder="Search articles by title or topic…"
+                    placeholder="Search articles by title or description"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />

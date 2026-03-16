@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { Users, MessageSquare, Newspaper, Send } from "lucide-react";
+import { Users, MessageSquare, Newspaper, Send, History } from "lucide-react";
 import { api, authHeaders } from "../lib/api";
+import { useNavigate } from "react-router-dom";
 
 interface Stats {
     usersCount: number;
@@ -15,6 +16,8 @@ export default function Dashboard() {
     const [stats, setStats] = useState<Stats | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -41,24 +44,35 @@ export default function Dashboard() {
             value: stats?.usersCount,
             icon: Users,
             color: "bg-blue-500",
+            link: "/users",
         },
         {
             name: "Total Topics",
             value: stats?.topicsCount,
             icon: MessageSquare,
             color: "bg-green-500",
+            link: "/topics",
         },
         {
             name: "News Articles",
             value: stats?.newsCount,
             icon: Newspaper,
             color: "bg-purple-500",
+            link: "/news",
         },
         {
             name: "Pushes Sent",
             value: stats?.pushSentCount,
             icon: Send,
             color: "bg-indigo-500",
+            link: "/send-push",
+        },
+        {
+            name: "History",
+            value: stats?.pushSentCount,
+            icon: History,
+            color: "bg-yellow-500",
+            link: "/history",
         },
     ];
 
@@ -71,7 +85,8 @@ export default function Dashboard() {
                     return (
                         <div
                             key={stat.name}
-                            className="bg-white rounded-xl shadow p-6 flex items-center"
+                            className="bg-white rounded-xl shadow p-6 flex items-center cursor-pointer"
+                            onClick={() => navigate(stat.link)}
                         >
                             <div
                                 className={`${stat.color} p-4 rounded-lg text-white mr-4`}

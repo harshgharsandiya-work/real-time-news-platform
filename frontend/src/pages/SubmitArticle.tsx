@@ -103,7 +103,7 @@ export default function SubmitArticle() {
                 {/* Title */}
                 <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                        Title *
+                        Title <span className="text-red-500">*</span>
                     </label>
                     <input
                         required
@@ -133,7 +133,7 @@ export default function SubmitArticle() {
                 {/* Content */}
                 <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                        Content *
+                        Content <span className="text-red-500">*</span>
                     </label>
                     <textarea
                         required
@@ -163,7 +163,7 @@ export default function SubmitArticle() {
                 {/* Topics */}
                 <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        Topics *{" "}
+                        Topics <span className="text-red-500">*</span>
                         <span className="text-gray-400 font-normal">
                             (select one or more)
                         </span>
@@ -199,7 +199,7 @@ export default function SubmitArticle() {
                 {/* Schedule */}
                 <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                        Publish At *{" "}
+                        Publish At <span className="text-red-500">*</span>
                         <span className="text-gray-400 font-normal">
                             (local time)
                         </span>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Navigate, useNavigate, Link } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function Register() {
     const [email, setEmail] = useState("");
@@ -8,6 +9,7 @@ export default function Register() {
     const [name, setName] = useState("");
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const { register, user } = useAuth();
     const navigate = useNavigate();
 
@@ -31,6 +33,10 @@ export default function Register() {
         } finally {
             setIsLoading(false);
         }
+    };
+
+    const toggleShowPassword = () => {
+        setShowPassword((prev) => !prev);
     };
 
     return (
@@ -60,7 +66,7 @@ export default function Register() {
                                 name="displayName"
                                 type="text"
                                 required
-                                className="mt-2 block w-full rounded-md border-0 py-2 px-3 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 text-black "
+                                className="mt-2 block w-full rounded-md border-0 py-2 px-3 shadow-sm ring-1 ring-inset ring-gray-300  sm:text-sm sm:leading-6 text-black "
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                             />
@@ -77,7 +83,7 @@ export default function Register() {
                                 name="email"
                                 type="email"
                                 required
-                                className="mt-2 block w-full rounded-md border-0 py-2 px-3 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 text-black"
+                                className="mt-2 block w-full rounded-md border-0 py-2 px-3 shadow-sm ring-1 ring-inset ring-gray-300  sm:text-sm sm:leading-6 text-black"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
@@ -89,16 +95,33 @@ export default function Register() {
                             >
                                 Password
                             </label>
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                required
-                                minLength={6}
-                                className="mt-2 block w-full rounded-md border-0 py-2 px-3 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 text-black"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
+                            <div className="relative">
+                                <input
+                                    id="password"
+                                    name="password"
+                                    type={showPassword ? "text" : "password"}
+                                    required
+                                    minLength={6}
+                                    className="mt-2 block w-full rounded-md border-0 py-2 px-3 shadow-sm ring-1 ring-inset ring-gray-300  sm:text-sm sm:leading-6 text-black"
+                                    value={password}
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
+                                />
+
+                                {/* Show Password */}
+                                <button
+                                    type="button"
+                                    onClick={toggleShowPassword}
+                                    className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500"
+                                >
+                                    {showPassword ? (
+                                        <EyeOff size={20} />
+                                    ) : (
+                                        <Eye size={20} />
+                                    )}
+                                </button>
+                            </div>
                         </div>
                     </div>
 
