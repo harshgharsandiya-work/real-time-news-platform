@@ -22,4 +22,4 @@ const verifyFirebaseToken = async (idToken) => {
     return await firebaseAdmin.auth().verifyIdToken(idToken);
 };
 
-module.exports = { verifyFirebaseToken };
+module.exports = { firebaseAdmin, messaging, verifyFirebaseToken };

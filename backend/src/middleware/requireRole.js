@@ -12,7 +12,7 @@ const ROLE_HIERARCHY = ["USER", "EDITOR", "ADMIN"];
  *   router.delete("/topic/:id", authenticate, requireRole("ADMIN"), handler)
  *   router.post("/news",        authenticate, requireRole("EDITOR"), handler)
  *
- * @param {"USER" | "EDITOR" | "ADMIN"} minimumRole
+ * @param {"USER" | "EDITOR" | "ADMIN" | Array<"USER" | "EDITOR" | "ADMIN">} minimumRole
  */
 const requireRole = (minimumRole) => {
     return (req, res, next) => {
@@ -25,12 +25,20 @@ const requireRole = (minimumRole) => {
         }
 
         const userRoleIndex = ROLE_HIERARCHY.indexOf(req.user.role);
-        const minimumRoleIndex = ROLE_HIERARCHY.indexOf(minimumRole);
+        const allowedRoles = Array.isArray(minimumRole)
+            ? minimumRole
+            : [minimumRole];
+        const minimumRoleIndex = Array.isArray(minimumRole)
+            ? -1
+            : ROLE_HIERARCHY.indexOf(minimumRole);
+        const isAuthorized = Array.isArray(minimumRole)
+            ? allowedRoles.includes(req.user.role)
+            : userRoleIndex >= minimumRoleIndex;
 
-        if (userRoleIndex < minimumRoleIndex) {
+        if (!isAuthorized) {
             return res.status(403).json({
                 success: false,
-                message: `Access denied. Required role: ${minimumRole}. Your role: ${req.user.role}`,
+                message: `Access denied. Required role: ${allowedRoles.join(" or ")}. Your role: ${req.user.role}`,
             });
         }
 

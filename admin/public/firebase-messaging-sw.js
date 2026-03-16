@@ -6,18 +6,62 @@ importScripts(
     "https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging-compat.js",
 );
 
-// Initialize the Firebase app in the service worker
-const firebaseConfig = {
-    apiKey: "AIzaSyDDnJAHPDJJY29EjrZSEsiGRScyotsIHMs",
-    authDomain: "fir-fcm-a4ca0.firebaseapp.com",
-    projectId: "fir-fcm-a4ca0",
-    storageBucket: "fir-fcm-a4ca0.firebasestorage.app",
-    messagingSenderId: "157064408547",
-    appId: "1:157064408547:web:77f45e0d47c8cbffe4c4d6",
-    measurementId: "G-R3FB817Z0F",
+let messaging = null;
+let isInitialized = false;
+
+const initializeFirebase = (firebaseConfig) => {
+    if (isInitialized || !firebaseConfig?.projectId) {
+        return;
+    }
+
+    firebase.initializeApp(firebaseConfig);
+    messaging = firebase.messaging();
+    messaging.onBackgroundMessage((payload) => {
+        const notificationTitle =
+            payload.notification?.title ||
+            payload.data?.title ||
+            "New notification";
+        const notificationOptions = {
+            body: payload.notification?.body || payload.data?.body || "",
+            data: {
+                url: payload.data?.url || "/",
+            },
+        };
+
+        self.registration.showNotification(
+            notificationTitle,
+            notificationOptions,
+        );
+    });
+
+    isInitialized = true;
 };
 
-firebase.initializeApp(firebaseConfig);
+self.addEventListener("message", (event) => {
+    if (event.data?.type === "FIREBASE_CONFIG") {
+        initializeFirebase(event.data.config);
+    }
+});
 
-// Retrieve firebase messaging
-const messaging = firebase.messaging();
+self.addEventListener("notificationclick", (event) => {
+    const targetUrl = event.notification.data?.url || "/";
+
+    event.notification.close();
+    event.waitUntil(
+        clients
+            .matchAll({ type: "window", includeUncontrolled: true })
+            .then((clientList) => {
+                for (const client of clientList) {
+                    if (client.url.includes(targetUrl) && "focus" in client) {
+                        return client.focus();
+                    }
+                }
+
+                if (clients.openWindow) {
+                    return clients.openWindow(targetUrl);
+                }
+
+                return undefined;
+            }),
+    );
+});

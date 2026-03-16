@@ -17,6 +17,8 @@ CREATE TYPE "Role" AS ENUM ('ADMIN', 'EDITOR', 'USER');
 
 -- AlterEnum
 ALTER TYPE "NotificationStatus" ADD VALUE 'PENDING';
+COMMIT;
+BEGIN;
 
 -- DropIndex
 DROP INDEX "TopicSubscription_topic_idx";
@@ -100,3 +102,4 @@ ALTER TABLE "NotificationPreferences" ADD CONSTRAINT "NotificationPreferences_us
 
 -- AddForeignKey
 ALTER TABLE "TopicSubscription" ADD CONSTRAINT "TopicSubscription_topicId_fkey" FOREIGN KEY ("topicId") REFERENCES "Topic"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+

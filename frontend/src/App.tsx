@@ -1,37 +1,49 @@
-import { useEffect, useState } from "react";
-import "./App.css";
-import { messaging } from "./config/firebase";
-import { getToken, onMessage } from "firebase/messaging";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
-function App() {
-    const [fcmToken, setFcmToken] = useState<string | null>(null);
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import MainLayout from "./layouts/MainLayout";
+import NewsFeed from "./pages/NewsFeed";
+import Subscriptions from "./pages/Subscriptions";
+import Preferences from "./pages/Preferences";
+import NotificationInbox from "./pages/NotificationInbox";
+import NewsDetail from "./pages/NewsDetail";
+import SubmitArticle from "./pages/SubmitArticle";
 
-    useEffect(() => {
-        requestPermission();
-    }, []);
-
-    const requestPermission = async () => {
-        const permission = await Notification.requestPermission();
-        if (permission === "granted") {
-            const token = await getToken(messaging, {
-                vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
-            });
-            setFcmToken(token);
-        } else {
-            console.log("User denied notification");
-        }
-    };
-
-    onMessage(messaging, (payload) => {
-        console.log("[Foreground Message]: ", payload);
-    });
-
+export default function App() {
     return (
-        <>
-            <h1>FCM Push Notification Demo</h1>
-            {fcmToken && <p>{fcmToken}</p>}
-        </>
+        <AuthProvider>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+
+                    <Route element={<ProtectedRoute />}>
+                        <Route element={<MainLayout />}>
+                            <Route path="/" element={<NewsFeed />} />
+                            <Route
+                                path="/subscriptions"
+                                element={<Subscriptions />}
+                            />
+                            <Route
+                                path="/inbox"
+                                element={<NotificationInbox />}
+                            />
+                            <Route
+                                path="/preferences"
+                                element={<Preferences />}
+                            />
+                            <Route path="/news/:id" element={<NewsDetail />} />
+                            <Route
+                                path="/submit-article"
+                                element={<SubmitArticle />}
+                            />
+                        </Route>
+                    </Route>
+                </Routes>
+            </BrowserRouter>
+        </AuthProvider>
     );
 }
-
-export default App;

@@ -26,6 +26,9 @@ model User {
   //one user has many tokens and many subscriptions
   fcmTokens          FcmToken[]
   topicSubscriptions TopicSubscription[]
+  news               News[]              @relation("NewsAuthor")
+  newsReactions      NewsReaction[]
+  newsComments       NewsComment[]
 }
 
 model NotificationPreferences {
@@ -68,6 +71,7 @@ model Topic {
   updatedAt DateTime @updatedAt
 
   topicSubscriptions TopicSubscription[]
+  newsLinks          NewsTopicLink[]
 }
 
 model TopicSubscription {
@@ -92,8 +96,65 @@ model News {
   content     String  @db.Text
   imageUrl    String?
 
+  // Publishing workflow
+  isPublished        Boolean   @default(false)
+  publishedAt        DateTime?
+  scheduledPublishAt DateTime?
+
+  // Author
+  authorId String?
+  author   User?   @relation("NewsAuthor", fields: [authorId], references: [uid], onDelete: SetNull)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  topics         NewsTopicLink[]
+  reactions      NewsReaction[]
+  comments       NewsComment[]
+  notification   Notification?   @relation(fields: [notificationId], references: [id])
+  notificationId String?
+}
+
+model NewsTopicLink {
+  newsId  String
+  topicId String
+  news    News   @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@id([newsId, topicId])
+}
+
+model NewsReaction {
+  id   String       @id @default(cuid())
+  type ReactionType
+
+  userId String
+  newsId String
+
+  user User @relation(fields: [userId], references: [uid], onDelete: Cascade)
+  news News @relation(fields: [newsId], references: [id], onDelete: Cascade)
+
+  createdAt      DateTime      @default(now())
+  notification   Notification? @relation(fields: [notificationId], references: [id])
+  notificationId String?
+
+  @@unique([userId, newsId])
+}
+
+model NewsComment {
+  id      String @id @default(cuid())
+  content String
+
+  userId String
+  newsId String
+
+  user User @relation(fields: [userId], references: [uid], onDelete: Cascade)
+  news News @relation(fields: [newsId], references: [id], onDelete: Cascade)
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  notification   Notification? @relation(fields: [notificationId], references: [id])
+  notificationId String?
 }
 
 model Notification {
@@ -112,6 +173,11 @@ model Notification {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // Authored news / reactions / comments
+  news      News[]
+  reactions NewsReaction[]
+  comments  NewsComment[]
 }
 
 enum Role {
@@ -131,4 +197,9 @@ enum NotificationStatus {
   INPROGRESS
   SENT
   FAILED
+}
+
+enum ReactionType {
+  LIKE
+  DISLIKE
 }
