@@ -39,6 +39,28 @@ A full-stack news broadcasting platform
 
 ---
 
+## Demonstration Screenshot
+
+### Admin Panel
+
+![Admin Panel](ss/admin-panel-dashboard.png)
+![Admin Panel](ss/admin-panel-history.png)
+![Admin Panel](ss/admin-panel-news.png)
+![Admin Panel](ss/admin-panel-send-push.png)
+![Admin Panel](ss/admin-panel-topic.png)
+![Admin Panel](ss/admin-panel-user.png)
+
+### User Panel
+
+![User Panel](ss/client-dashboard.png)
+![User Panel](ss/client-feed-discover.png)
+![User Panel](ss/client-inbox.png)
+![User Panel](ss/client-post.png)
+![User Panel](ss/client-preferences.png)
+![User Panel](ss/client-subscription.png)
+
+---
+
 ## Local Development Setup
 
 ### Prerequisites
