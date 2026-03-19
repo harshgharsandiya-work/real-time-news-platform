@@ -57,14 +57,6 @@ const unsubscribeFromTopic = async (uid, topicId) => {
     }
 };
 
-module.exports = {
-    getAllUsers,
-    getUserById,
-    updatePreferences,
-    subscribeToTopic,
-    unsubscribeFromTopic,
-};
-
 const updateUserRole = async (uid, role) => {
     const user = await prisma.user.findUnique({
         where: { uid },
@@ -78,4 +70,25 @@ const updateUserRole = async (uid, role) => {
     });
 };
 
-module.exports.updateUserRole = updateUserRole;
+const updateUser = async (uid, name, email) => {
+    const user = await prisma.user.findUnique({
+        where: { uid },
+        select: { uid: true },
+    });
+    if (!user) throw createError(404, "User not found");
+    return prisma.user.update({
+        where: { uid },
+        data: { name, email },
+        select: { uid: true, name: true, email: true, role: true },
+    });
+};
+
+module.exports = {
+    getAllUsers,
+    getUserById,
+    updatePreferences,
+    subscribeToTopic,
+    unsubscribeFromTopic,
+    updateUserRole,
+    updateUser,
+};

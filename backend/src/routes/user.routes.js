@@ -7,8 +7,10 @@ const {
     updatePreferences,
     subscribeToTopic,
     unsubscribeFromTopic,
+    getMyProfile,
+    updateUser,
+    updateUserRole,
 } = require("../controllers/user.controller");
-const { updateUserRole } = require("../controllers/user.controller");
 
 const router = express.Router();
 
@@ -17,6 +19,8 @@ router.use(authenticate);
 router.post("/preferences", updatePreferences);
 router.post("/subscribe", subscribeToTopic);
 router.post("/unsubscribe", unsubscribeFromTopic);
+router.get("/me", getMyProfile);
+router.patch("/me", updateUser);
 
 // Admin Routes
 router.use(requireRole(["ADMIN", "EDITOR"]));

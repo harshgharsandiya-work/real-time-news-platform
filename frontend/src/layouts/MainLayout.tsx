@@ -8,6 +8,7 @@ import {
     Menu,
     X,
     Inbox,
+    User,
 } from "lucide-react";
 import { useState } from "react";
 import FCMManager from "../components/FCMManager";
@@ -40,6 +41,11 @@ export default function MainLayout() {
             path: "/preferences",
             icon: <Settings size={18} />,
         },
+        {
+            name: "Profile",
+            path: "/profile",
+            icon: <User size={18} />,
+        },
     ];
 
     return (
@@ -47,7 +53,7 @@ export default function MainLayout() {
             <FCMManager />
 
             {/* Navbar */}
-            <nav className="bg-gradient-to-r from-blue-600 to-purple-700 shadow-md sticky top-0 z-50">
+            <nav className="bg-linear-to-r from-blue-600 to-purple-700 shadow-md sticky top-0 z-50">
                 <div className="container mx-auto px-6 py-4 flex items-center justify-between relative">
                     {/* Logo */}
                     <a
@@ -60,7 +66,7 @@ export default function MainLayout() {
                     </a>
 
                     {/* Desktop Nav Links */}
-                    <div className="hidden lg:flex items-center space-x-2 flex-grow justify-center">
+                    <div className="hidden lg:flex items-center space-x-2 grow justify-center">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.name}
@@ -79,10 +85,7 @@ export default function MainLayout() {
 
                     {/* Desktop Right: User + Logout */}
                     <div className="hidden lg:flex items-center space-x-4">
-                        <Link
-                            to="/preferences"
-                            className="text-indigo-100 text-sm"
-                        >
+                        <Link to="/profile" className="text-indigo-100 text-sm">
                             {user?.email?.split("@")[0]}
                         </Link>
                         <button
@@ -135,7 +138,7 @@ export default function MainLayout() {
                         {/* Mobile User + Logout */}
                         <div className="flex items-center justify-between px-3 py-2">
                             <Link
-                                to="/preferences"
+                                to="/profile"
                                 className="text-indigo-200 text-sm"
                             >
                                 {user?.email?.split("@")[0]}

@@ -68,14 +68,6 @@ const unsubscribeFromTopic = async (req, res, next) => {
     }
 };
 
-module.exports = {
-    getAllUsers,
-    getUserById,
-    updatePreferences,
-    subscribeToTopic,
-    unsubscribeFromTopic,
-};
-
 const updateUserRole = async (req, res, next) => {
     try {
         const { uid } = req.params;
@@ -87,4 +79,32 @@ const updateUserRole = async (req, res, next) => {
     }
 };
 
-module.exports.updateUserRole = updateUserRole;
+const getMyProfile = async (req, res, next) => {
+    try {
+        const user = await userService.getUserById(req.user.uid);
+        res.status(200).json({ success: true, data: user });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const updateUser = async (req, res, next) => {
+    try {
+        const { name, email } = req.body;
+        const updated = await userService.updateUser(req.user.uid, name, email);
+        res.status(200).json({ success: true, data: updated });
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = {
+    getAllUsers,
+    getUserById,
+    updatePreferences,
+    subscribeToTopic,
+    unsubscribeFromTopic,
+    updateUserRole,
+    getMyProfile,
+    updateUser,
+};

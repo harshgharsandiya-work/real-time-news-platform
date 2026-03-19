@@ -11,6 +11,7 @@ import Preferences from "./pages/Preferences";
 import NotificationInbox from "./pages/NotificationInbox";
 import NewsDetail from "./pages/NewsDetail";
 import SubmitArticle from "./pages/SubmitArticle";
+import UserProfile from "./pages/UserProfile";
 
 export default function App() {
     return (
@@ -40,6 +41,7 @@ export default function App() {
                                 path="/submit-article"
                                 element={<SubmitArticle />}
                             />
+                            <Route path="/profile" element={<UserProfile />} />
                         </Route>
                     </Route>
                 </Routes>
