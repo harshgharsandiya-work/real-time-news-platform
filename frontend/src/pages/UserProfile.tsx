@@ -197,7 +197,10 @@ export default function UserProfile() {
                     {/* ── HEADER ── */}
                     <div style={styles.header}>
                         {/* Avatar with Instagram-style gradient ring */}
-                        <div style={styles.avatarRingOuter}>
+                        <div
+                            style={styles.avatarRingOuter}
+                            className="cursor-pointer"
+                        >
                             <div style={styles.avatarRingInner}>
                                 <div style={styles.avatar}>
                                     {getInitials(user.name)}

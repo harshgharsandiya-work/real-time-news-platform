@@ -61,27 +61,39 @@ const internalProcessPush = async (notificationRecord) => {
             const allUsers = await prisma.user.findMany({
                 include: {
                     fcmTokens: { where: { isActive: true } },
-                    notificationPreferences: true
-                }
+                    notificationPreferences: true,
+                },
             });
-            allUsers.forEach(user => {
+            allUsers.forEach((user) => {
                 const prefs = user.notificationPreferences;
-                if (prefs && (!prefs.receivePushNotifications || (prefs.isMuted && (!prefs.mutedUntil || new Date() < new Date(prefs.mutedUntil))))) return;
-                user.fcmTokens.forEach(t => tokens.push(t.token));
+                if (
+                    prefs &&
+                    (!prefs.receivePushNotifications ||
+                        (prefs.isMuted &&
+                            (!prefs.mutedUntil ||
+                                new Date() < new Date(prefs.mutedUntil))))
+                )
+                    return;
+                user.fcmTokens.forEach((t) => tokens.push(t.token));
             });
         } else if (target === "USER") {
             const user = await prisma.user.findUnique({
                 where: { uid: targetValue },
                 include: {
                     fcmTokens: { where: { isActive: true } },
-                    notificationPreferences: true
-                }
+                    notificationPreferences: true,
+                },
             });
             if (user) {
                 const prefs = user.notificationPreferences;
-                const isMuted = prefs && (!prefs.receivePushNotifications || (prefs.isMuted && (!prefs.mutedUntil || new Date() < new Date(prefs.mutedUntil))));
+                const isMuted =
+                    prefs &&
+                    (!prefs.receivePushNotifications ||
+                        (prefs.isMuted &&
+                            (!prefs.mutedUntil ||
+                                new Date() < new Date(prefs.mutedUntil))));
                 if (!isMuted) {
-                    user.fcmTokens.forEach(t => tokens.push(t.token));
+                    user.fcmTokens.forEach((t) => tokens.push(t.token));
                 }
             }
         } else if (target === "TOPIC") {
@@ -93,16 +105,23 @@ const internalProcessPush = async (notificationRecord) => {
                 where: { topicId: targetValue },
                 include: {
                     user: {
-                        include: { 
+                        include: {
                             fcmTokens: { where: { isActive: true } },
-                            notificationPreferences: true 
+                            notificationPreferences: true,
                         },
                     },
                 },
             });
             subscriptions.forEach((sub) => {
                 const prefs = sub.user.notificationPreferences;
-                if (prefs && (!prefs.receivePushNotifications || (prefs.isMuted && (!prefs.mutedUntil || new Date() < new Date(prefs.mutedUntil))))) return;
+                if (
+                    prefs &&
+                    (!prefs.receivePushNotifications ||
+                        (prefs.isMuted &&
+                            (!prefs.mutedUntil ||
+                                new Date() < new Date(prefs.mutedUntil))))
+                )
+                    return;
                 sub.user.fcmTokens.forEach((t) => tokens.push(t.token));
             });
         }
@@ -289,15 +308,30 @@ const processScheduledPush = async (id) => {
     await internalProcessPush(notification);
 };
 
-module.exports = {
-    saveToken,
-    deleteToken,
-    sendNotification,
-    scheduleNotification,
-    getNotificationHistory,
-    getUserInbox,
-    getPendingScheduled,
-    processScheduledPush,
+const markAsRead = async (userId, notificationId) => {
+    return await prisma.userNotificationRead.create({
+        data: {
+            userId,
+            notificationId,
+        },
+    });
+};
+
+const markAllAsRead = async (userId) => {
+    return await prisma.userNotificationRead.createMany({
+        data: {
+            userId,
+            notificationId: {
+                in: await prisma.notification.findMany({
+                    where: {
+                        target: "USER",
+                        targetValue: userId,
+                    },
+                    select: { id: true },
+                }),
+            },
+        },
+    });
 };
 
 /**
@@ -409,4 +443,16 @@ const notifyNewsPublished = async (newsId, title, description) => {
     }
 };
 
-module.exports.notifyNewsPublished = notifyNewsPublished;
+module.exports = {
+    saveToken,
+    deleteToken,
+    sendNotification,
+    scheduleNotification,
+    getNotificationHistory,
+    getUserInbox,
+    getPendingScheduled,
+    processScheduledPush,
+    markAsRead,
+    markAllAsRead,
+    notifyNewsPublished,
+};

@@ -437,7 +437,7 @@ export default function NewsFeed() {
                 </div>
                 <Link
                     to="/submit-article"
-                    className="shrink-0 inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-xl font-semibold text-sm hover:bg-indigo-700 transition-colors shadow-sm"
+                    className="shrink-0 inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2.5 rounded-xl font-semibold text-sm hover:bg-indigo-700 transition-colors shadow-sm max-w-40"
                 >
                     <Send size={15} />
                     Submit Article

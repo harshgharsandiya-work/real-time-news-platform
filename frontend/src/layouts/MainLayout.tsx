@@ -85,8 +85,11 @@ export default function MainLayout() {
 
                     {/* Desktop Right: User + Logout */}
                     <div className="hidden lg:flex items-center space-x-4">
-                        <Link to="/profile" className="text-indigo-100 text-sm">
-                            {user?.email?.split("@")[0]}
+                        <Link
+                            to="/profile"
+                            className="w-9 h-9 font-bold hover:border-2 hover:border-indigo-600 rounded-full bg-indigo-800 flex items-center justify-center text-indigo-100 text-sm"
+                        >
+                            {user?.email?.split("@")[0][0].toUpperCase()}
                         </Link>
                         <button
                             onClick={handleLogout}

@@ -6,6 +6,8 @@ const {
     scheduleNotification: schedulePush,
     getNotificationHistory: getHistory,
     getUserInbox: fetchUserInbox,
+    markAsRead: markAsReadService,
+    markAllAsRead: markAllAsReadService,
 } = require("../services/notification.service");
 
 /* ---------------- ZOD SCHEMAS ---------------- */
@@ -126,6 +128,25 @@ const getInbox = async (req, res, next) => {
     }
 };
 
+const markAsRead = async (req, res, next) => {
+    try {
+        const { notificationId } = req.params;
+        const read = await markAsReadService(req.user.uid, notificationId);
+        res.status(200).json({ success: true, data: read });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const markAllAsRead = async (req, res, next) => {
+    try {
+        const read = await markAllAsReadService(req.user.uid);
+        res.status(200).json({ success: true, data: read });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     registerToken,
     removeToken,
@@ -133,4 +154,6 @@ module.exports = {
     scheduleNotification,
     getNotificationHistory,
     getInbox,
+    markAsRead,
+    markAllAsRead,
 };

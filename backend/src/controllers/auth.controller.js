@@ -110,6 +110,7 @@ const register = async (req, res, next) => {
  * @access  Public (Requires Firebase token in header)
  */
 const login = async (req, res, next) => {
+    console.log("hello");
     try {
         const authHeader = req.headers.authorization;
         if (!authHeader || !authHeader.startsWith("Bearer ")) {

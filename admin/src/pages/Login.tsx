@@ -9,10 +9,11 @@ export default function Login() {
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
-    const { login, user } = useAuth();
+
+    const { login, user, jwtToken } = useAuth();
     const navigate = useNavigate();
 
-    if (user) {
+    if (user && jwtToken) {
         return <Navigate to="/" replace />;
     }
 

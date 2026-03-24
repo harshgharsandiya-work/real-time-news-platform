@@ -7,6 +7,7 @@ export default function NotificationInbox() {
     const { jwtToken } = useAuth();
     const [notifications, setNotifications] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [unreadCount, setUnreadCount] = useState(0);
 
     useEffect(() => {
         const fetchInbox = async () => {
@@ -15,6 +16,9 @@ export default function NotificationInbox() {
                     headers: authHeaders(jwtToken),
                 });
                 setNotifications(res.data.data);
+                setUnreadCount(
+                    res.data.data.filter((n: any) => !n.isRead).length,
+                );
             } catch (err) {
                 console.error("Failed to load inbox", err);
             } finally {
@@ -23,6 +27,40 @@ export default function NotificationInbox() {
         };
         fetchInbox();
     }, [jwtToken]);
+
+    const markAsRead = async (notificationId: string) => {
+        try {
+            await api.patch(
+                `/notifications/read/${notificationId}`,
+                {},
+                { headers: authHeaders(jwtToken) },
+            );
+            setNotifications((prev) =>
+                prev.map((n) =>
+                    n.id === notificationId ? { ...n, isRead: true } : n,
+                ),
+            );
+            setUnreadCount((prev) => prev - 1);
+        } catch (err) {
+            console.error("Failed to mark as read", err);
+        }
+    };
+
+    const markAllAsRead = async () => {
+        try {
+            await api.patch(
+                "/notifications/read/all",
+                {},
+                { headers: authHeaders(jwtToken) },
+            );
+            setNotifications((prev) =>
+                prev.map((n) => ({ ...n, isRead: true })),
+            );
+            setUnreadCount(0);
+        } catch (err) {
+            console.error("Failed to mark all as read", err);
+        }
+    };
 
     if (loading)
         return (
@@ -33,13 +71,23 @@ export default function NotificationInbox() {
 
     return (
         <div className="max-w-4xl mx-auto">
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900">
-                    Notification Inbox
-                </h1>
-                <p className="mt-2 text-gray-600">
-                    Your recent alerts and messages.
-                </p>
+            <div className="flex justify-between items-center mb-8">
+                <div>
+                    <h1 className="text-3xl font-bold text-gray-900">
+                        Notification Inbox
+                    </h1>
+                    <p className="mt-2 text-gray-600">
+                        Your recent alerts and messages.
+                    </p>
+                </div>
+                {unreadCount > 0 && (
+                    <button
+                        onClick={markAllAsRead}
+                        className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                    >
+                        Mark All as Read ({unreadCount})
+                    </button>
+                )}
             </div>
 
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
